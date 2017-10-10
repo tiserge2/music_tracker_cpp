@@ -3,6 +3,8 @@
         <file>20113684.jpg</file>
         <file>f83d80df.jpg</file>
         <file>1-Carnival-CLBR-1170x731.png</file>
+        <file>essaie</file>
+        <file>style.qss</file>
     </qresource>
     <qresource prefix="/new/bdd">
         <file>essaie</file>

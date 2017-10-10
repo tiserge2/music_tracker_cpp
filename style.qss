@@ -1,0 +1,8 @@
+QTableView {
+   background: #81EA4F;
+   color: black;
+   alternate-background-color: #ffffff;
+   font-size:13px;
+   font:"Purisa";
+}
+

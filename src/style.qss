@@ -1,0 +1,4 @@
+QTableView:item:checked {
+   background-color: blue;
+   color: yellow;
+}

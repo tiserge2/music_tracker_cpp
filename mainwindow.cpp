@@ -14,13 +14,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
     connect(ui->pushButton_2,SIGNAL(clicked(bool)),this,SLOT(close()));
-    connect(ui->pushButton,SIGNAL(clicked(bool)),this,SLOT(insertDataIntoTable()));
+    connect(ui->pushButton_3,SIGNAL(clicked(bool)),this,SLOT(removeData()));
+    connect(ui->pushButton,SIGNAL(clicked(bool)),this,SLOT(executeQuery()));
     /***1-*********************************/
                 //Databse
     database = QSqlDatabase::addDatabase("QSQLITE");
-    database.setDatabaseName("/home/sergioumix/Documents/sqliteDB/essaie");
+    database.setDatabaseName("src/essaie");
     database.open();
     if(database.open()){
         ui->statusBar->showMessage("Successfull connection with the DB");
@@ -31,22 +31,25 @@ MainWindow::MainWindow(QWidget *parent) :
 
     /**2-***********************************/
                 //the model
-    QSqlTableModel *model = new QSqlTableModel(this,database);
+    model = new QSqlTableModel(this,database);
     model->setTable("music_tracker");
     model->setEditStrategy(QSqlTableModel::OnManualSubmit);
     model->select();
     model->setHeaderData(0, Qt::Horizontal, tr("Author"));
     model->setHeaderData(1, Qt::Horizontal, tr("Title"));
     model->setHeaderData(2, Qt::Horizontal, tr("Album"));
+    model->setHeaderData(3, Qt::Horizontal, tr("Year"));
 
     /*************************************/
 
     /**3***********************************/
                     //the view
     ui->tableView->setModel(model);
+    ui->tableView->setAlternatingRowColors(true);
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);
-    ui->tableView->resizeColumnsToContents();
+    //ui->tableView->resizeColumnsToContents();
+    //ui->tableView->set
     ui->tableView->horizontalHeader()->setStretchLastSection(true);
 
     ui->tableView->show();
@@ -60,20 +63,30 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::insertDataIntoTable(){
+void MainWindow::executeQuery(){
     if(database.open()){
         if(!ui->lineEdit->text().isEmpty() && !ui->lineEdit_2->text().isEmpty() && !ui->lineEdit_3->text().isEmpty()){
             database = QSqlDatabase::database();
             QSqlQuery query(database);
-            QString queryText("insert into music_tracker(author, title, album)"
-                              "values (?, ?, ?);");
+            QString queryText("insert into music_tracker(author, title,album, year)"
+                              "values (?, ?, ?, ?);");
             query.clear();
             query.prepare(queryText );
             query.addBindValue(ui->lineEdit_2->text());
             query.addBindValue(ui->lineEdit->text());
+            query.addBindValue(ui->lineEdit_4->text());
             query.addBindValue(ui->lineEdit_3->text());
             if(query.exec()){
                 ui->statusBar->showMessage("Your new field have been added successfully.");
+                if(insertData(ui->lineEdit_2->text(),ui->lineEdit->text(),ui->lineEdit_4->text(),ui->lineEdit_3->text())){
+                    ui->statusBar->showMessage("Refreshing data view.");
+                    ui->lineEdit->clear();
+                    ui->lineEdit_2->clear();
+                    ui->lineEdit_3->clear();
+                    ui->lineEdit_4->clear();
+                } else {
+                    ui->statusBar->showMessage("Can't add new data in the view.");
+                }
             } else {
                 ui->statusBar->showMessage("Failled adding new field to DB.");
                 qDebug() << query.lastError().text();
@@ -86,4 +99,30 @@ void MainWindow::insertDataIntoTable(){
     } else {
         qDebug() << "Database not open";
     }
+}
+
+bool MainWindow::insertData(QVariant author,QVariant title,QVariant album,QVariant year){
+    int row = 0;
+    if(model->insertRow(row)){
+        model->setData(model->index(row,0),author);
+        model->setData(model->index(row,1),title);
+        model->setData(model->index(row,2),album);
+        model->setData(model->index(row,3),year);
+        return true;
+    } else {
+        return false;
+    }
+
+
+}
+
+bool MainWindow::removeData(){
+    ui->statusBar->showMessage("Data will be removed, button in implementation phase");
+    QItemSelection selection(ui->tableView->selectionModel()->selection());
+    QModelIndexList indexes = selection.indexes();
+    foreach (QModelIndex index, indexes) {
+         qDebug() << index;
+    }
+
+    return true;
 }

@@ -35,7 +35,6 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui
 
 DISTFILES += \
-    src/f83d80df.jpg \
     src/essaie
 
 RESOURCES += \
