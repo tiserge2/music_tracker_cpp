@@ -39,14 +39,14 @@ public:
     QGridLayout *gridLayout;
     QLabel *label_2;
     QLabel *label_5;
-    QLineEdit *lineEdit;
     QLabel *label_3;
     QLineEdit *lineEdit_3;
     QLabel *label;
-    QLineEdit *lineEdit_2;
     QLineEdit *lineEdit_4;
     QPushButton *pushButton;
     QPushButton *pushButton_5;
+    QLineEdit *lineEdit;
+    QLineEdit *lineEdit_2;
     QWidget *horizontalLayoutWidget;
     QHBoxLayout *horizontalLayout_4;
     QPushButton *pushButton_4;
@@ -77,7 +77,7 @@ public:
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         verticalLayoutWidget = new QWidget(centralWidget);
         verticalLayoutWidget->setObjectName(QString::fromUtf8("verticalLayoutWidget"));
-        verticalLayoutWidget->setGeometry(QRect(200, 10, 551, 119));
+        verticalLayoutWidget->setGeometry(QRect(200, 10, 551, 135));
         verticalLayout = new QVBoxLayout(verticalLayoutWidget);
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
@@ -106,15 +106,6 @@ public:
 
         gridLayout->addWidget(label_5, 0, 2, 1, 1);
 
-        lineEdit = new QLineEdit(verticalLayoutWidget);
-        lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
-        lineEdit->setInputMask(QString::fromUtf8(""));
-        lineEdit->setText(QString::fromUtf8(""));
-        lineEdit->setFrame(true);
-        lineEdit->setPlaceholderText(QString::fromUtf8("type the title"));
-
-        gridLayout->addWidget(lineEdit, 1, 1, 1, 1);
-
         label_3 = new QLabel(verticalLayoutWidget);
         label_3->setObjectName(QString::fromUtf8("label_3"));
         label_3->setStyleSheet(QString::fromUtf8("font: 75 20pt \"Purisa\";\n"
@@ -131,7 +122,7 @@ public:
         lineEdit_3->setObjectName(QString::fromUtf8("lineEdit_3"));
         lineEdit_3->setMaxLength(4);
 
-        gridLayout->addWidget(lineEdit_3, 1, 3, 1, 1);
+        gridLayout->addWidget(lineEdit_3, 2, 3, 1, 1);
 
         label = new QLabel(verticalLayoutWidget);
         label->setObjectName(QString::fromUtf8("label"));
@@ -153,26 +144,34 @@ public:
 
         gridLayout->addWidget(label, 0, 0, 1, 1);
 
-        lineEdit_2 = new QLineEdit(verticalLayoutWidget);
-        lineEdit_2->setObjectName(QString::fromUtf8("lineEdit_2"));
-
-        gridLayout->addWidget(lineEdit_2, 1, 0, 1, 1);
-
         lineEdit_4 = new QLineEdit(verticalLayoutWidget);
         lineEdit_4->setObjectName(QString::fromUtf8("lineEdit_4"));
 
-        gridLayout->addWidget(lineEdit_4, 1, 2, 1, 1);
+        gridLayout->addWidget(lineEdit_4, 2, 2, 1, 1);
 
         pushButton = new QPushButton(verticalLayoutWidget);
         pushButton->setObjectName(QString::fromUtf8("pushButton"));
         pushButton->setCheckable(false);
 
-        gridLayout->addWidget(pushButton, 2, 2, 1, 1);
+        gridLayout->addWidget(pushButton, 3, 2, 1, 1);
 
         pushButton_5 = new QPushButton(verticalLayoutWidget);
         pushButton_5->setObjectName(QString::fromUtf8("pushButton_5"));
 
-        gridLayout->addWidget(pushButton_5, 2, 1, 1, 1);
+        gridLayout->addWidget(pushButton_5, 3, 1, 1, 1);
+
+        lineEdit = new QLineEdit(verticalLayoutWidget);
+        lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
+        lineEdit->setText(QString::fromUtf8(""));
+        lineEdit->setFrame(true);
+        lineEdit->setPlaceholderText(QString::fromUtf8("type the title"));
+
+        gridLayout->addWidget(lineEdit, 2, 1, 1, 1);
+
+        lineEdit_2 = new QLineEdit(verticalLayoutWidget);
+        lineEdit_2->setObjectName(QString::fromUtf8("lineEdit_2"));
+
+        gridLayout->addWidget(lineEdit_2, 2, 0, 1, 1);
 
 
         verticalLayout->addLayout(gridLayout);
@@ -212,7 +211,7 @@ public:
         label_4->setScaledContents(false);
         tableView = new QTableView(centralWidget);
         tableView->setObjectName(QString::fromUtf8("tableView"));
-        tableView->setGeometry(QRect(250, 140, 441, 341));
+        tableView->setGeometry(QRect(250, 150, 441, 341));
         tableView->setStyleSheet(QString::fromUtf8(""));
         tableView->setShowGrid(false);
         tableView->setGridStyle(Qt::DashDotDotLine);
@@ -258,10 +257,11 @@ public:
         lineEdit_3->setText(QString());
         lineEdit_3->setPlaceholderText(QApplication::translate("MainWindow", "type the year", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "Author", 0, QApplication::UnicodeUTF8));
-        lineEdit_2->setPlaceholderText(QApplication::translate("MainWindow", "type the author name", 0, QApplication::UnicodeUTF8));
         lineEdit_4->setPlaceholderText(QApplication::translate("MainWindow", "type the album ", 0, QApplication::UnicodeUTF8));
         pushButton->setText(QApplication::translate("MainWindow", "Add track", 0, QApplication::UnicodeUTF8));
         pushButton_5->setText(QApplication::translate("MainWindow", "Random Track", 0, QApplication::UnicodeUTF8));
+        lineEdit->setInputMask(QString());
+        lineEdit_2->setPlaceholderText(QApplication::translate("MainWindow", "type the author name", 0, QApplication::UnicodeUTF8));
         pushButton_4->setText(QApplication::translate("MainWindow", "Download", 0, QApplication::UnicodeUTF8));
         pushButton_3->setText(QApplication::translate("MainWindow", "Remove", 0, QApplication::UnicodeUTF8));
         pushButton_2->setText(QApplication::translate("MainWindow", "Quit", 0, QApplication::UnicodeUTF8));

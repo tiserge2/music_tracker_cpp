@@ -19,8 +19,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pushButton,SIGNAL(clicked(bool)),this,SLOT(insertData()));
     //creating a timer to update the table each second
     updateInterval = new QTimer(this);
-    updateInterval->setInterval(1000);
+    connect(ui->pushButton_3,SIGNAL(clicked(bool)),this,SLOT(start_timer()));
     connect(updateInterval,SIGNAL(timeout()),this,SLOT(updateTable()));
+    connect(updateInterval,SIGNAL(timeout()),this,SLOT(stop_timer()));
     /***1-*********************************/
                 //Databse
     database = QSqlDatabase::addDatabase("QSQLITE");
@@ -127,6 +128,7 @@ void MainWindow::unShowData(int i){
 
     //QModelIndexList indexes = selection.indexes();
     if(model->removeRow(i)){
+        //updateInterval->start();
         ui->statusBar->showMessage("Row has been removed.");
     } else {
         ui->statusBar->showMessage("Row can't be removed.");
@@ -183,4 +185,13 @@ void MainWindow::removeData(){
 void MainWindow::updateTable(){
     model->select();
     ui->tableView->reset();
+}
+
+void MainWindow::start_timer(){
+    updateInterval->setInterval(100);
+    updateInterval->start();
+}
+
+void MainWindow::stop_timer(){
+    updateInterval->stop();
 }

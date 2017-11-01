@@ -24,6 +24,8 @@ public slots:
     void insertData();
     void removeData();
     void updateTable();
+    void start_timer();
+    void stop_timer();
 
 
 

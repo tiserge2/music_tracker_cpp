@@ -44,7 +44,7 @@
       <x>200</x>
       <y>10</y>
       <width>551</width>
-      <height>119</height>
+      <height>135</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -86,22 +86,6 @@ color:blue;</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="lineEdit">
-         <property name="inputMask">
-          <string notr="true"/>
-         </property>
-         <property name="text">
-          <string notr="true"/>
-         </property>
-         <property name="frame">
-          <bool>true</bool>
-         </property>
-         <property name="placeholderText">
-          <string notr="true">type the title</string>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="3">
         <widget class="QLabel" name="label_3">
          <property name="styleSheet">
@@ -126,7 +110,7 @@ color:blue;</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="3">
+       <item row="2" column="3">
         <widget class="QLineEdit" name="lineEdit_3">
          <property name="inputMask">
           <string/>
@@ -181,21 +165,14 @@ color:blue;</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QLineEdit" name="lineEdit_2">
-         <property name="placeholderText">
-          <string>type the author name</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2">
+       <item row="2" column="2">
         <widget class="QLineEdit" name="lineEdit_4">
          <property name="placeholderText">
           <string>type the album </string>
          </property>
         </widget>
        </item>
-       <item row="2" column="2">
+       <item row="3" column="2">
         <widget class="QPushButton" name="pushButton">
          <property name="text">
           <string>Add track</string>
@@ -205,10 +182,33 @@ color:blue;</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
+       <item row="3" column="1">
         <widget class="QPushButton" name="pushButton_5">
          <property name="text">
           <string>Random Track</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="lineEdit">
+         <property name="inputMask">
+          <string/>
+         </property>
+         <property name="text">
+          <string notr="true"/>
+         </property>
+         <property name="frame">
+          <bool>true</bool>
+         </property>
+         <property name="placeholderText">
+          <string notr="true">type the title</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLineEdit" name="lineEdit_2">
+         <property name="placeholderText">
+          <string>type the author name</string>
          </property>
         </widget>
        </item>
@@ -287,7 +287,7 @@ color:blue;</string>
     <property name="geometry">
      <rect>
       <x>250</x>
-      <y>140</y>
+      <y>150</y>
       <width>441</width>
       <height>341</height>
      </rect>
