@@ -6,7 +6,7 @@
 #include <QtSql/QSqlQuery>
 #include <QMessageBox>
 #include <QDebug>
-
+#include <QString>
 //-------------------------
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -16,7 +16,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     connect(ui->pushButton_2,SIGNAL(clicked(bool)),this,SLOT(close()));
     connect(ui->pushButton_3,SIGNAL(clicked(bool)),this,SLOT(removeData()));
-    connect(ui->pushButton,SIGNAL(clicked(bool)),this,SLOT(executeQuery()));
+    connect(ui->pushButton,SIGNAL(clicked(bool)),this,SLOT(insertData()));
+    //creating a timer to update the table each second
+    updateInterval = new QTimer(this);
+    updateInterval->setInterval(1000);
+    connect(updateInterval,SIGNAL(timeout()),this,SLOT(updateTable()));
     /***1-*********************************/
                 //Databse
     database = QSqlDatabase::addDatabase("QSQLITE");
@@ -50,6 +54,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);
     //ui->tableView->resizeColumnsToContents();
     //ui->tableView->set
+    ui->tableView->verticalHeader()->setVisible(false);
     ui->tableView->horizontalHeader()->setStretchLastSection(true);
 
     ui->tableView->show();
@@ -63,9 +68,9 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::executeQuery(){
+void MainWindow::insertData(){
     if(database.open()){
-        if(!ui->lineEdit->text().isEmpty() && !ui->lineEdit_2->text().isEmpty() && !ui->lineEdit_3->text().isEmpty()){
+        if(!ui->lineEdit->text().isEmpty() && !ui->lineEdit_2->text().isEmpty() && !ui->lineEdit_3->text().isEmpty() && !ui->lineEdit_4->text().isEmpty()){
             database = QSqlDatabase::database();
             QSqlQuery query(database);
             QString queryText("insert into music_tracker(author, title,album, year)"
@@ -78,12 +83,12 @@ void MainWindow::executeQuery(){
             query.addBindValue(ui->lineEdit_3->text());
             if(query.exec()){
                 ui->statusBar->showMessage("Your new field have been added successfully.");
-                if(insertData(ui->lineEdit_2->text(),ui->lineEdit->text(),ui->lineEdit_4->text(),ui->lineEdit_3->text())){
-                    ui->statusBar->showMessage("Refreshing data view.");
+                if(showData(ui->lineEdit_2->text(),ui->lineEdit->text(),ui->lineEdit_4->text(),ui->lineEdit_3->text())){
                     ui->lineEdit->clear();
                     ui->lineEdit_2->clear();
                     ui->lineEdit_3->clear();
                     ui->lineEdit_4->clear();
+                    ui->statusBar->showMessage("Refreshing data view.");
                 } else {
                     ui->statusBar->showMessage("Can't add new data in the view.");
                 }
@@ -101,13 +106,14 @@ void MainWindow::executeQuery(){
     }
 }
 
-bool MainWindow::insertData(QVariant author,QVariant title,QVariant album,QVariant year){
+bool MainWindow::showData(QVariant author,QVariant title,QVariant album,QVariant year){
     int row = 0;
     if(model->insertRow(row)){
         model->setData(model->index(row,0),author);
         model->setData(model->index(row,1),title);
         model->setData(model->index(row,2),album);
         model->setData(model->index(row,3),year);
+        model->submitAll();
         return true;
     } else {
         return false;
@@ -116,13 +122,65 @@ bool MainWindow::insertData(QVariant author,QVariant title,QVariant album,QVaria
 
 }
 
-bool MainWindow::removeData(){
+void MainWindow::unShowData(int i){
     ui->statusBar->showMessage("Data will be removed, button in implementation phase");
-    QItemSelection selection(ui->tableView->selectionModel()->selection());
-    QModelIndexList indexes = selection.indexes();
-    foreach (QModelIndex index, indexes) {
-         qDebug() << index;
+
+    //QModelIndexList indexes = selection.indexes();
+    if(model->removeRow(i)){
+        ui->statusBar->showMessage("Row has been removed.");
+    } else {
+        ui->statusBar->showMessage("Row can't be removed.");
+    }
+    //return true;}
+}
+
+void MainWindow::removeData(){
+//    QModelIndexList selection(ui->tableView->selectionModel()->selectedRows());
+//    QModelIndex index = selection.at(0);
+    //getting the index of the data so that i can remove them later
+    QModelIndexList selection(ui->tableView->selectionModel()->selectedIndexes());
+    QVector <QVector <int> > dataIndexes;
+    QVector < int > dataIndex;
+    foreach (QModelIndex index, selection) {
+        dataIndex.clear();
+        dataIndex.push_back(index.row());
+        dataIndex.push_back(index.column());
+        dataIndexes.push_back(dataIndex);
+    }
+    //query to remove the selected data in the db
+    QSqlQuery removeQuery;
+    QString author = ui->tableView->model()->data(ui->tableView->model()->index(dataIndexes.at(0).value(0),dataIndexes.at(0).value(1))).toString();
+    QString title = ui->tableView->model()->data(ui->tableView->model()->index(dataIndexes.at(1).value(0),dataIndexes.at(1).value(1))).toString();
+    QString album = ui->tableView->model()->data(ui->tableView->model()->index(dataIndexes.at(2).value(0),dataIndexes.at(2).value(1))).toString();
+    QString year = ui->tableView->model()->data(ui->tableView->model()->index(dataIndexes.at(3).value(0),dataIndexes.at(3).value(1))).toString();
+
+    QString removeQueryText = "DELETE FROM music_tracker WHERE"
+                              " (author IS NULL OR author = ?)  AND "
+                              " (title IS NULL OR title = ?) AND "
+                              " (album IS NULL OR album = ?) AND"
+                              " (year IS NULL OR year = ?) ;";
+
+    removeQuery.prepare(removeQueryText);
+    removeQuery.addBindValue(author);
+    removeQuery.addBindValue(title);
+    removeQuery.addBindValue(album);
+    removeQuery.addBindValue(year);
+
+    if(removeQuery.exec()){
+        unShowData(dataIndexes.at(0).value(0));
+        ui->statusBar->showMessage("Data has been removed from the Db");
+        qDebug() << removeQuery.lastError() ;
+        //qDebug() <<  QSqlField::clear(author);
+
+    } else {
+        ui->statusBar->showMessage("Can't remove the data in the Db");
+        qDebug() << removeQuery.lastError() ;
     }
 
-    return true;
+    qDebug() << author << title << album << year;
+}
+
+void MainWindow::updateTable(){
+    model->select();
+    ui->tableView->reset();
 }

@@ -17,11 +17,13 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    bool insertData(QVariant author,QVariant title,QVariant album,QVariant year);
+    bool showData(QVariant author,QVariant title,QVariant album,QVariant year);
+    void unShowData(int i);
 
 public slots:
-    void executeQuery();
-    bool removeData();
+    void insertData();
+    void removeData();
+    void updateTable();
 
 
 
@@ -30,6 +32,7 @@ private:
     //Database *db;
     QSqlDatabase database;
     QSqlTableModel *model;
+    QTimer *updateInterval;
 };
 
 #endif // MAINWINDOW_H

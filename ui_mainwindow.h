@@ -129,6 +129,7 @@ public:
 
         lineEdit_3 = new QLineEdit(verticalLayoutWidget);
         lineEdit_3->setObjectName(QString::fromUtf8("lineEdit_3"));
+        lineEdit_3->setMaxLength(4);
 
         gridLayout->addWidget(lineEdit_3, 1, 3, 1, 1);
 
